@@ -55,7 +55,7 @@ namespace iothubsigfox
                 float seconden = ConvertHexToFloat(hex_data);
                 float kwh = 0.22f;
                 float kws = kwh / 3600;
-                float kostprijs = kwh * seconden;
+                float kostprijs = kws * seconden;
                 double prijs = Math.Round(kostprijs, 2);
                 TimeSpan t = TimeSpan.FromSeconds(seconden);
                 string tijd = string.Format("{0:D2}h:{1:D2}m:{2:D2}s",t.Hours,t.Minutes,t.Seconds);
@@ -139,12 +139,7 @@ namespace iothubsigfox
                                         new MessageFact()
                                         {
                                             Name = "Kostprijs: ",
-                                            Value = "� " + Convert.ToString(kostprijs)
-                                        },
-                                        new MessageFact()
-                                        {
-                                            Name = "Kostprijs: ",
-                                            Value = "� " + Convert.ToString(kostprijs)
+                                            Value = "€ " + Convert.ToString(kostprijs)
                                         },
                                         new MessageFact()
                                         {
