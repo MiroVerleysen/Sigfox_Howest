@@ -15,6 +15,8 @@ using System.Collections.Generic;
 using InfluxDB.Client.Core;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace iothubsigfox
 {
@@ -67,9 +69,24 @@ namespace iothubsigfox
                 recordInflux.oplaadtijd = seconden;
                 await Stuurdata();
             }
+            else if (lengte == 12)
+            {
+                await SendMail(id);
+            }
 
         }
-
+        static async Task SendMail(string id)
+        {
+            var apiKey = "<sendgrid_api_key>";
+            var client = new SendGridClient(apiKey);
+            var from = new EmailAddress("miro123@hotmail.be", "example user");
+            var subject = "Laadpaal is nog steeds beschikbaar";
+            var to = new EmailAddress("miroverleysen@gmail.com", "example user");
+            var plainTextContent = "De laadpaal met id " + id + " is nog steeds beschikbaar.";
+            var htmlContent = "<strong>De laadpaal met id " + id + " is nog steeds beschikbaar." + "</strong>";
+            var msg = MailHelper.CreateSingleEmail(from, to, subject, plainTextContent, htmlContent);
+            var response = await client.SendEmailAsync(msg);
+        }
         private static float ConvertHexToFloat(string hexString)
         {
             // Converting to integer
